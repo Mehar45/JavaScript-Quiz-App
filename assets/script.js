@@ -43,11 +43,28 @@ function highScore() {
   leaderBoard.addEventListener("click", highScore);
 }
 
+function setLocalStorage(key, value) {
+  let data = [];
+  if (localStorage.getItem(key)) {
+    data = JSON.parse(localStorage.getItem(key));
+  }
+  data.push(value);
+  if (data.length > 5) {
+    data.shift();
+    data;
+  }
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function getLocalStorage(key) {
+  return JSON.parse(localStorage.getItem(key));
+}
+
 function showResult() {
   finalResult.innerHTML = "";
-  for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
-    finalResult.innerHTML += `<li>${key} - ${localStorage.getItem(key)}</li>`;
+  const result = getLocalStorage("userScore");
+  for (let i = 0; i < result.length; i++) {
+    finalResult.innerHTML += `<li>${result[i].userName} - ${result[i].score}</li>`;
   }
 }
 leaderBoard.addEventListener("click", highScore);
@@ -93,7 +110,12 @@ options.addEventListener("click", (e) => {
 submit.addEventListener("submit", (e) => {
   e.preventDefault();
   const userName = submit.name.value;
-  localStorage.setItem(userName, score);
+  const userScore = {
+    userName,
+    score,
+  };
+  userScore.score;
+  setLocalStorage("userScore", userScore);
   showResult();
   iSection.toggle("toggle");
   hSection.toggle("toggle");
